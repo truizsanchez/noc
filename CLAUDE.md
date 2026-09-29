@@ -23,7 +23,8 @@ Phases in `ROADMAP.md`. Sister project with the same conventions: `../game-ai`.
 ## Privacy
 - Never write the owner's personal email anywhere (commits, `pyproject.toml`, docs). The repo's
   local `user.email` is the GitHub noreply address; check `git log --format='%ae %ce'` before
-  pushing.
+  pushing. Merge PRs locally (`git merge --no-ff`, then push `main`), never with GitHub's merge
+  button or `gh pr merge`: those merge commits carry the account's email.
 
 ## Commands
 - `uv run pytest` · `uv run ruff check` · `uv run ruff format` · `uv run mypy`
