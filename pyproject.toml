@@ -38,6 +38,10 @@ ignore = [
     "PLR0917",  # ... positionally, as in the book (circle(x, y, d)), and so do arcade callbacks
 ]
 
+[tool.ruff.lint.flake8-bugbear]
+# Frozen dataclasses are safe as dataclass defaults.
+extend-immutable-calls = ["noc.common.vector.Vector"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--import-mode=importlib"

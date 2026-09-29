@@ -54,7 +54,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 - Random walkers, distributions, gaussian, accept-reject, custom probability, **Perlin noise** (port of p5's `noise()`
   so results match the book, with octaves/falloff), 1D/2D noise examples.
 
-**[ ] Phase 2 — Ch.1 Vectors** — `Vector` (decide: own dataclass vs. `pyglet.math.Vec2`; p5-like API is mutable,
+**[x] Phase 2 — Ch.1 Vectors** — `Vector` (decide: own dataclass vs. `pyglet.math.Vec2`; p5-like API is mutable,
   Python version likely immutable with operators), bouncing ball, Mover, acceleration towards the mouse.
 
 **[ ] Phase 3 — Ch.2 Forces** — Newton's laws, mass, gravity/wind, friction, drag (liquid), gravitational attraction, n-body.

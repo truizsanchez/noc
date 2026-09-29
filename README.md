@@ -51,6 +51,7 @@ starts at that example: `uv run python -m noc.ch01_vectors 7`.
 | Chapter | Command | Shows |
 |---|---|---|
 | Intro, 0 | `uv run python -m noc.ch00_randomness` | random walks, distributions, Perlin noise |
+| 1 | `uv run python -m noc.ch01_vectors` | vector math, motion with velocity and acceleration |
 
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
