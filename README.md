@@ -68,12 +68,14 @@ and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
 
 ## Repository layout
 
-- `src/noc/common/`: code shared by several chapters. `view.py` is the arcade harness
-  (`Sketch`, and `Canvas` for p5-style drawing); everything else is pure Python.
+- `src/noc/common/`: code shared by several chapters: the vector, physics, noise and
+  neural-network modules, and `view.py`, the arcade harness (`Sketch`, and `Canvas` for
+  p5-style drawing). Everything but `view.py` is pure Python and numpy.
 - `src/noc/chNN_*/`: one package per chapter, with the simulation separate from the sketches
   that draw it.
 - `chapters/`: our notes per chapter: examples mapped to code, deviations from the JavaScript
-  and the exercises chosen. Start at [chapters/README.md](chapters/README.md).
+  and the exercises chosen. Start at [chapters/README.md](chapters/README.md);
+  [chapters/appendices.md](chapters/appendices.md) covers the rest of the book.
 - `tests/`: mirrors `src/noc`.
 - `tools/`: the book-to-Markdown converter.
 
