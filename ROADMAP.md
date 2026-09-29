@@ -57,7 +57,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 **[x] Phase 2 — Ch.1 Vectors** — `Vector` (decide: own dataclass vs. `pyglet.math.Vec2`; p5-like API is mutable,
   Python version likely immutable with operators), bouncing ball, Mover, acceleration towards the mouse.
 
-**[ ] Phase 3 — Ch.2 Forces** — Newton's laws, mass, gravity/wind, friction, drag (liquid), gravitational attraction, n-body.
+**[x] Phase 3 — Ch.2 Forces** — Newton's laws, mass, gravity/wind, friction, drag (liquid), gravitational attraction, n-body.
 
 **[ ] Phase 4 — Ch.3 Oscillation** — angles, angular motion, polar coordinates, simple harmonic motion, waves,
   pendulum, springs.
