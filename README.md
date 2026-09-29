@@ -58,6 +58,7 @@ starts at that example: `uv run python -m noc.ch01_vectors 7`.
 | 5 | `uv run python -m noc.ch05_steering` | steering, flow fields, path following, flocking |
 | 6 | `uv run python -m noc.ch06_physics` | pymunk bodies and joints, Verlet springs and soft bodies |
 | 7 | `uv run python -m noc.ch07_ca` | elementary CA, the Game of Life, hexagonal and cyclic CA |
+| 8 | `uv run python -m noc.ch08_fractals` | recursion, Koch curves, trees, L-systems |
 
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
