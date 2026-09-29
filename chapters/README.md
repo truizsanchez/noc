@@ -13,3 +13,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [4. Particle systems](04-particle-systems.md) | `view.Canvas.image`, `set_additive`, `make_texture` | 2 (`Mover`), 3 (spaceship) |
 | [5. Autonomous agents](05-autonomous-agents.md) | — | 2 (`Mover`), 0 (noise fields) |
 | [6. Physics libraries](06-physics-libraries.md) | — | 2 (forces), 3 (springs, pendulums) |
+| [7. Cellular automata](07-cellular-automata.md) | `view.Canvas.pixels(smooth=False)` | — |
