@@ -347,6 +347,12 @@ class Sketch(arcade.View):
     def draw(self, canvas: Canvas) -> None:
         """Draw the current state (p5's ``draw()`` without the simulation part)."""
 
+    def mouse_down(self) -> None:
+        """A mouse button was pressed at ``self.mouse`` (p5's ``mousePressed()``)."""
+
+    def mouse_up(self) -> None:
+        """The mouse button was released (p5's ``mouseReleased()``)."""
+
     # --- arcade callbacks -------------------------------------------------------------
     def on_fixed_update(self, delta_time: float) -> None:
         if not self.paused:
@@ -389,11 +395,14 @@ class Sketch(arcade.View):
         return self.on_mouse_motion(x, y, dx, dy)
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> bool | None:
+        self.on_mouse_motion(x, y, 0, 0)
         self.mouse_pressed = True
+        self.mouse_down()
         return None
 
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int) -> bool | None:
         self.mouse_pressed = False
+        self.mouse_up()
         return None
 
     def on_key_release(self, symbol: int, modifiers: int) -> bool | None:
