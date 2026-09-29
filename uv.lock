@@ -335,6 +335,7 @@ source = { editable = "." }
 dependencies = [
     { name = "arcade" },
     { name = "numpy" },
+    { name = "pymunk" },
 ]
 
 [package.dev-dependencies]
@@ -348,6 +349,7 @@ dev = [
 requires-dist = [
     { name = "arcade", specifier = ">=3.3.3" },
     { name = "numpy", specifier = ">=2.5.3" },
+    { name = "pymunk", specifier = ">=6.9,<7" },
 ]
 
 [package.metadata.requires-dev]

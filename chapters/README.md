@@ -12,3 +12,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [3. Oscillation](03-oscillation.md) | — | 2 (`Mover`, forces) |
 | [4. Particle systems](04-particle-systems.md) | `view.Canvas.image`, `set_additive`, `make_texture` | 2 (`Mover`), 3 (spaceship) |
 | [5. Autonomous agents](05-autonomous-agents.md) | — | 2 (`Mover`), 0 (noise fields) |
+| [6. Physics libraries](06-physics-libraries.md) | — | 2 (forces), 3 (springs, pendulums) |
