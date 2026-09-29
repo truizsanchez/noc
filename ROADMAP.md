@@ -42,7 +42,7 @@ Canvas default 640×240 like the book's sketches. Stack: uv, ruff (same rule set
 ## Phases
 Progress: `[x]` merged into `main`, `[ ]` pending.
 
-**[ ] Phase 0 — Bootstrap + book to Markdown**
+**[x] Phase 0 — Bootstrap + book to Markdown**
 - Remove PyCharm `main.py`; ignore `.idea/`. pyproject/ruff/mypy/pytest config copied from `../game-ai`, CI workflow,
   README (chapter map table: book chapter ↔ 2024 example dirs ↔ 2012 dirs ↔ package), CLAUDE.md, LICENSE (MIT, code only).
 - `tools/html_to_md.py`: 2024 content HTML → one `.md` per chapter + images into `../nature-of-code-private/book-md/`;
