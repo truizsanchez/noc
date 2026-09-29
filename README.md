@@ -61,6 +61,7 @@ starts at that example: `uv run python -m noc.ch01_vectors 7`.
 | 8 | `uv run python -m noc.ch08_fractals` | recursion, Koch curves, trees, L-systems |
 | 9 | `uv run python -m noc.ch09_ga` | genetic algorithms, smart rockets, interactive selection, ecosystem |
 | 10 | `uv run python -m noc.ch10_nn` | the perceptron, XOR, a gesture classifier |
+| 11 | `uv run python -m noc.ch11_neuroevolution` | Flappy Bird, neuroevolving rockets and creatures, an ecosystem |
 
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
