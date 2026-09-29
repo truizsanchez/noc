@@ -16,9 +16,10 @@ Decisions taken:
 - 2024 edition drives chapter structure and example numbering; 2012 only when it adds something.
 - Scope per chapter: every numbered example + a selection of key exercises (those that add a concept, e.g. cloth, bridge).
 - Ch. 10–11 neural networks: **numpy from scratch** (perceptron, MLP with backprop, neuroevolution); no ml5/TF equivalent.
-- Ch. 6 physics libraries: **stop at the start of that phase to decide together**. Intent: pymunk replaces Matter.js;
-  for the Toxiclibs part (verlet particles, springs, soft bodies) check whether pymunk (or another library) covers it,
-  and if so show **both** our own verlet implementation and the library version side by side.
+- Ch. 6 physics libraries (decided at the start of Phase 7): pymunk replaces Matter.js, with no rigid-body engine of
+  our own; the integration interlude runs explicit Euler, semi-implicit Euler and Verlet side by side; Toxiclibs.js
+  is replaced by our own numpy Verlet engine, with pymunk `DampedSpring` versions of the string, soft body and cloth
+  to compare (`V` switches).
 - Everything in English (code, docs, docstrings); don't explain Python internals unless asked.
 - Book Markdown lives outside the repo (`../nature-of-code-private/book-md/`).
 
@@ -88,7 +89,8 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 **[x] Phase 12 — Ch.11 Neuroevolution** — Flappy Bird, neuroevolutionary Flappy Bird, neuroevolution smart rockets,
   steering, creature sensors, ecosystem.
 
-**[x] Phase 13 (optional) — Wrap-up docs** — chapters index, README demo table, Creature Design / resources notes.
+**[x] Phase 13 (optional) — Wrap-up docs** — chapters index, README demo table, Creature Design / resources notes
+  (`chapters/appendices.md`).
 
 ## Working method (every chapter phase, as in game-ai)
 1. Read the chapter Markdown + 2024 sketches (2012 only as tie-breaker); write `chapters/NN-*.md` outline mirroring the book.

@@ -2,7 +2,9 @@
 
 Our own notes per book chapter (`NN-<name>.md`): which code implements each example,
 design decisions and deviations from the p5.js sketches, the exercises chosen, and how to
-run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](../ROADMAP.md)).
+run the examples. [appendices.md](appendices.md) covers the rest of the book (introduction,
+creature design, the Ecosystem Project), suggests a route through the port, and lists the
+shared modules in `noc.common`.
 
 | Note | Adds to `noc.common` | Builds on |
 |---|---|---|
@@ -18,3 +20,8 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [9. Evolutionary computing](09-evolutionary-computing.md) | — | 2 (`Mover`), 0 (noise) |
 | [10. Neural networks](10-neural-networks.md) | `neural`, `view.Canvas.discs` | 9 (GA for Exercise 10.2) |
 | [11. Neuroevolution](11-neuroevolution.md) | `neural.Brains` | 9 (GA), 10 (networks), 5 (steering) |
+| [Beyond the chapters](appendices.md) | — | — |
+
+Most notes follow the same order: how to run the sketches, a "Book sections → code" table,
+design decisions and deviations from the p5.js sketches (including bugs in the originals that
+were fixed), the exercises not ported, and what the tests cover.
