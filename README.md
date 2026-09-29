@@ -12,9 +12,13 @@ or get a copy.
 
 ## Setup
 
+Requires Python 3.13 (pymunk has no 3.14 wheel yet) and [uv](https://docs.astral.sh/uv/):
+
 ```sh
+git clone https://github.com/truizsanchez/noc.git
+cd noc
 uv sync
-uv run pytest
+uv run python -m noc.ch00_randomness
 ```
 
 ## Chapter map
@@ -76,10 +80,14 @@ and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
 - `chapters/`: our notes per chapter: examples mapped to code, deviations from the JavaScript
   and the exercises chosen. Start at [chapters/README.md](chapters/README.md);
   [chapters/appendices.md](chapters/appendices.md) covers the rest of the book.
-- `tests/`: mirrors `src/noc`.
+- `tests/`: mirrors `src/noc`; `test_sketches.py` also runs every sketch for a few frames
+  offscreen (it needs EGL: `libegl1 libgl1-mesa-dri` on Debian/Ubuntu).
 - `tools/`: the book-to-Markdown converter.
 
 Checks: `uv run pytest`, `uv run ruff check`, `uv run ruff format`, `uv run mypy`.
+Conventions for contributors and coding agents are in [AGENTS.md](AGENTS.md). The same
+approach applied to *Programming Game AI by Example*:
+[game-ai](https://github.com/truizsanchez/game-ai).
 
 ## Book text
 
@@ -95,6 +103,14 @@ uv run tools/html_to_md.py \
 ```
 
 Images and example screenshots are linked in place from `content/`, not copied.
+
+## Acknowledgements
+
+All the simulations, their structure and their numbering come from Daniel Shiffman's
+*The Nature of Code* and its example sketches
+([noc-book-2](https://github.com/nature-of-code/noc-book-2); the 2012 Processing examples,
+[noc-examples-processing](https://github.com/nature-of-code/noc-examples-processing), are MIT
+licensed, © Daniel Shiffman). Thanks to him and to everyone who contributed to the book.
 
 ## License
 
