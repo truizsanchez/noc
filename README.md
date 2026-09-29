@@ -48,6 +48,10 @@ Each chapter opens a window with its examples, in book order: `PageDown`/`PageUp
 examples, `H` shows the keys, `P` pauses, `N` steps one frame, `R` restarts. A number
 starts at that example: `uv run python -m noc.ch01_vectors 7`.
 
+| Chapter | Command | Shows |
+|---|---|---|
+| Intro, 0 | `uv run python -m noc.ch00_randomness` | random walks, distributions, Perlin noise |
+
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
 

@@ -50,7 +50,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 - Demo harness in `noc.common.view` (sketch-like: `setup`/`step`/`draw`, fixed timestep, help overlay, demo switching),
   modelled on `../game-ai/src/gameai/common/view.py`.
 
-**[ ] Phase 1 — Introduction + Ch.0 Randomness**
+**[x] Phase 1 — Introduction + Ch.0 Randomness**
 - Random walkers, distributions, gaussian, accept-reject, custom probability, **Perlin noise** (port of p5's `noise()`
   so results match the book, with octaves/falloff), 1D/2D noise examples.
 
@@ -79,16 +79,16 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 
 **[ ] Phase 9 — Ch.8 Fractals** — recursion, Cantor set, Koch curve, recursive trees, L-systems.
 
-**[ ] Phase 10 — Ch.9 Evolutionary Computing** — GA for Shakespeare monkey, fitness/selection/crossover/mutation,
+**[x] Phase 10 — Ch.9 Evolutionary Computing** — GA for Shakespeare monkey, fitness/selection/crossover/mutation,
   smart rockets, interactive selection, evolving ecosystem.
 
-**[ ] Phase 11 — Ch.10 Neural Networks** — perceptron (with normalization), multilayer network with backprop in numpy,
+**[x] Phase 11 — Ch.10 Neural Networks** — perceptron (with normalization), multilayer network with backprop in numpy,
   gesture classifier recreated with the numpy MLP (mouse-drawn training data).
 
-**[ ] Phase 12 — Ch.11 Neuroevolution** — Flappy Bird, neuroevolutionary Flappy Bird, neuroevolution smart rockets,
+**[x] Phase 12 — Ch.11 Neuroevolution** — Flappy Bird, neuroevolutionary Flappy Bird, neuroevolution smart rockets,
   steering, creature sensors, ecosystem.
 
-**[ ] Phase 13 (optional) — Wrap-up docs** — chapters index, README demo table, Creature Design / resources notes.
+**[x] Phase 13 (optional) — Wrap-up docs** — chapters index, README demo table, Creature Design / resources notes.
 
 ## Working method (every chapter phase, as in game-ai)
 1. Read the chapter Markdown + 2024 sketches (2012 only as tie-breaker); write `chapters/NN-*.md` outline mirroring the book.
