@@ -7,3 +7,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | Note | Adds to `noc.common` | Builds on |
 |---|---|---|
 | [0. Randomness](00-randomness.md) (with the Introduction) | `view` (sketch harness, `Canvas`), `transform`, `tessellate`, `noise`, `mathutils` | — |
+| [1. Vectors](01-vectors.md) | `vector` | 0 (walkers, noise) |
