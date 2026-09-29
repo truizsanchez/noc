@@ -60,6 +60,7 @@ starts at that example: `uv run python -m noc.ch01_vectors 7`.
 | 7 | `uv run python -m noc.ch07_ca` | elementary CA, the Game of Life, hexagonal and cyclic CA |
 | 8 | `uv run python -m noc.ch08_fractals` | recursion, Koch curves, trees, L-systems |
 | 9 | `uv run python -m noc.ch09_ga` | genetic algorithms, smart rockets, interactive selection, ecosystem |
+| 10 | `uv run python -m noc.ch10_nn` | the perceptron, XOR, a gesture classifier |
 
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).

@@ -16,3 +16,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [7. Cellular automata](07-cellular-automata.md) | `view.Canvas.pixels(smooth=False)` | — |
 | [8. Fractals](08-fractals.md) | — | 0 (noise), 1 (vectors) |
 | [9. Evolutionary computing](09-evolutionary-computing.md) | — | 2 (`Mover`), 0 (noise) |
+| [10. Neural networks](10-neural-networks.md) | `neural`, `view.Canvas.discs` | 9 (GA for Exercise 10.2) |
