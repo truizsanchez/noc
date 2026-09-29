@@ -226,3 +226,103 @@ class Classifier:
         """``(label, confidence)`` pairs, most confident first, like ml5's results."""
         confidences = self.network.predict(self.normalizer(inputs))
         return sorted(zip(self.labels, confidences.tolist(), strict=True), key=lambda r: -r[1])
+
+
+@dataclass
+class Brains:
+    """A population of networks with the same shape, weights stacked along a first axis.
+
+    Chapter 11 runs hundreds of small networks every frame (one per bird or creature).
+    Evaluating them one by one costs a numpy call per layer per network; stacked, one
+    ``einsum`` per layer evaluates the whole population. Selection, crossover and mutation
+    work on the stacks too. :meth:`member` extracts one ordinary :class:`NeuralNetwork`.
+    """
+
+    weights: list[Array]  # each (population, inputs, outputs)
+    biases: list[Array]  # each (population, outputs)
+    output: Output = "sigmoid"
+    hidden: Hidden = "sigmoid"
+
+    @classmethod
+    def random(
+        cls,
+        count: int,
+        sizes: Sequence[int],
+        rng: np.random.Generator,
+        output: Output = "sigmoid",
+        hidden: Hidden = "sigmoid",
+    ) -> Brains:
+        weights = [
+            rng.normal(0, np.sqrt(1 / n_in), (count, n_in, n_out))
+            for n_in, n_out in itertools.pairwise(sizes)
+        ]
+        biases = [rng.normal(0, 0.1, (count, n)) for n in sizes[1:]]
+        return cls(weights, biases, output, hidden)
+
+    def __len__(self) -> int:
+        return len(self.weights[0])
+
+    def predict(self, inputs: Array) -> Array:
+        """``inputs[i]`` goes through network ``i``; returns one row of outputs per network."""
+        x = inputs
+        last = len(self.weights) - 1
+        for i, (w, b) in enumerate(zip(self.weights, self.biases, strict=True)):
+            z = np.einsum("ni,nio->no", x, w) + b
+            if i < last:
+                x = sigmoid(z) if self.hidden == "sigmoid" else np.maximum(z, 0)
+            elif self.output == "softmax":
+                x = softmax(z)
+            elif self.output == "sigmoid":
+                x = sigmoid(z)
+            else:
+                x = z
+        return x
+
+    def take(self, indices: Sequence[int] | npt.NDArray[np.int64]) -> Brains:
+        """A population of copies of the given members (repeats allowed)."""
+        index = np.asarray(indices, np.int64)
+        return Brains(
+            [w[index].copy() for w in self.weights],
+            [b[index].copy() for b in self.biases],
+            self.output,
+            self.hidden,
+        )
+
+    def concat(self, other: Brains) -> Brains:
+        return Brains(
+            [np.concatenate([a, b]) for a, b in zip(self.weights, other.weights, strict=True)],
+            [np.concatenate([a, b]) for a, b in zip(self.biases, other.biases, strict=True)],
+            self.output,
+            self.hidden,
+        )
+
+    def mutate(self, rate: float, rng: np.random.Generator, amount: float = 0.25) -> None:
+        for array in (*self.weights, *self.biases):
+            mask = rng.random(array.shape) < rate
+            np.add(array, mask * rng.normal(0, amount, array.shape), out=array)
+
+    def next_generation(
+        self, fitness: Sequence[float] | Array, rng: np.random.Generator, mutation_rate: float
+    ) -> Brains:
+        """Pick two parents per child in proportion to fitness (the same odds as the book's
+        relay-race selection), cross them weight by weight, and mutate."""
+        p = np.asarray(fitness, np.float64)
+        p = p / p.sum() if p.sum() > 0 else np.full(len(p), 1 / len(p))
+        n = len(self)
+        a = self.take(rng.choice(n, n, p=p))
+        b = self.take(rng.choice(n, n, p=p))
+        for mine, theirs in zip((*a.weights, *a.biases), (*b.weights, *b.biases), strict=True):
+            pick = rng.random(mine.shape) < 0.5
+            mine[pick] = theirs[pick]
+        a.mutate(mutation_rate, rng)
+        return a
+
+    def member(self, i: int) -> NeuralNetwork:
+        sizes = (self.weights[0].shape[1], *(w.shape[2] for w in self.weights))
+        return NeuralNetwork(
+            tuple(sizes),
+            [w[i].copy() for w in self.weights],
+            [b[i].copy() for b in self.biases],
+            self.output,
+            self.hidden,
+        )

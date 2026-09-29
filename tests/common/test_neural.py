@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from noc.common.neural import Classifier, NeuralNetwork, Normalizer, sigmoid, softmax
+from noc.common.neural import Brains, Classifier, NeuralNetwork, Normalizer, sigmoid, softmax
 
 
 def numeric_gradient(net: NeuralNetwork, x: np.ndarray, y: np.ndarray, layer: int) -> np.ndarray:
@@ -101,3 +101,25 @@ def test_gesture_classifier() -> None:
     assert results[0][0] == "up"
     assert sum(conf for _, conf in results) == pytest.approx(1)
     assert classifier.classify((1.0, 0.1))[0][0] == "right"
+
+
+def test_brains_match_their_members() -> None:
+    rng = np.random.default_rng(6)
+    brains = Brains.random(5, (4, 6, 2), rng, output="softmax")
+    inputs = rng.random((5, 4))
+    together = brains.predict(inputs)
+    for i in range(5):
+        assert together[i] == pytest.approx(brains.member(i).predict(inputs[i]))
+
+
+def test_brains_take_concat_and_next_generation() -> None:
+    rng = np.random.default_rng(7)
+    brains = Brains.random(4, (3, 5, 2), rng)
+    copies = brains.take([2, 2])
+    assert len(copies) == 2
+    assert (copies.weights[0][0] == brains.weights[0][2]).all()
+    assert len(brains.concat(copies)) == 6
+    # All the fitness on member 1: every child is a (mutated) copy of it.
+    children = brains.next_generation([0, 1, 0, 0], rng, mutation_rate=0.0)
+    for w_child, w_parent in zip(children.weights, brains.weights, strict=True):
+        assert (w_child == w_parent[1]).all()

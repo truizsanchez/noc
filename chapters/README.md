@@ -17,3 +17,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [8. Fractals](08-fractals.md) | — | 0 (noise), 1 (vectors) |
 | [9. Evolutionary computing](09-evolutionary-computing.md) | — | 2 (`Mover`), 0 (noise) |
 | [10. Neural networks](10-neural-networks.md) | `neural`, `view.Canvas.discs` | 9 (GA for Exercise 10.2) |
+| [11. Neuroevolution](11-neuroevolution.md) | `neural.Brains` | 9 (GA), 10 (networks), 5 (steering) |
