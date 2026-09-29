@@ -55,6 +55,7 @@ starts at that example: `uv run python -m noc.ch01_vectors 7`.
 | 2 | `uv run python -m noc.ch02_forces` | gravity, friction, drag, attraction, n bodies |
 | 3 | `uv run python -m noc.ch03_oscillation` | angular motion, waves, springs, pendulums |
 | 4 | `uv run python -m noc.ch04_particles` | emitters, forces on systems, textures, additive blending |
+| 5 | `uv run python -m noc.ch05_steering` | steering, flow fields, path following, flocking |
 
 The canvas keeps the book's coordinates (usually 640x240, y pointing down, units per frame)
 and is shown scaled up; set `NOC_SCALE` to change the factor (default 2).
