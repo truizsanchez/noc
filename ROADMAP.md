@@ -62,7 +62,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 **[x] Phase 4 — Ch.3 Oscillation** — angles, angular motion, polar coordinates, simple harmonic motion, waves,
   pendulum, springs.
 
-**[ ] Phase 5 — Ch.4 Particle Systems** — particle/emitter, many emitters, inheritance & polymorphism (→ Protocols),
+**[x] Phase 5 — Ch.4 Particle Systems** — particle/emitter, many emitters, inheritance & polymorphism (→ Protocols),
   forces and repellers on systems, image textures and additive blending.
 
 **[ ] Phase 6 — Ch.5 Autonomous Agents** — seek/arrive, desired velocity, flow fields, path following,

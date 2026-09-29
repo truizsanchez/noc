@@ -17,9 +17,9 @@ Common keys: ``P`` pause, ``N`` one step while paused, ``R`` restart, ``H`` help
 
 from __future__ import annotations
 
+import itertools
 import os
 import sys
-from array import array
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
 from typing import ClassVar
@@ -29,6 +29,7 @@ import numpy as np
 import numpy.typing as npt
 from arcade.gl import BufferDescription, Texture2D, geometry
 from arcade.types import LRBT
+from PIL import Image
 
 from noc.common import tessellate
 from noc.common.transform import IDENTITY
@@ -57,37 +58,92 @@ def rgba(color: Color) -> tuple[int, int, int, int]:
 
 
 class _Batch:
-    """Colored triangles collected during a frame and drawn with one call."""
+    """Colored triangles collected during a frame and drawn with one call.
 
-    VERTEX = "2f 4f"  # position, color (0-255, as arcade's shape shader expects)
+    Positions go into a flat list and colors into runs of ``(color, vertex count)``, expanded
+    with numpy when the batch is drawn: much cheaper than building each vertex in Python.
+    """
 
     def __init__(self, ctx: arcade.ArcadeContext) -> None:
         self._ctx = ctx
         self._program = ctx.shape_element_list_program
-        self._data = array("f")
-        self._vbo = ctx.buffer(reserve=4096 * 24, usage="stream")
+        self._positions: list[float] = []
+        self._colors: list[tuple[int, int, int, int]] = []
+        self._counts: list[int] = []
+        self._vbo = ctx.buffer(reserve=4096 * 8, usage="stream")
+        self._cbo = ctx.buffer(reserve=4096 * 16, usage="stream")
         self._geometry = ctx.geometry(
-            [BufferDescription(self._vbo, self.VERTEX, ["in_vert", "in_color"])]
+            [
+                BufferDescription(self._vbo, "2f", ["in_vert"]),
+                BufferDescription(self._cbo, "4f", ["in_color"]),
+            ]
         )
 
-    def add(self, triangles: Sequence[Point], color: Color) -> None:
-        r, g, b, a = rgba(color)
-        data = self._data
-        for x, y in triangles:
-            data.extend((x, y, r, g, b, a))
+    def __bool__(self) -> bool:
+        return bool(self._positions)
 
-    def flush(self) -> None:
-        if not self._data:
+    def add(self, triangles: Sequence[Point], color: Color) -> None:
+        self._positions.extend(itertools.chain.from_iterable(triangles))
+        self._colors.append(rgba(color))
+        self._counts.append(len(triangles))
+
+    def flush(self, blend: tuple[int, int]) -> None:
+        if not self._positions:
             return
-        size = len(self._data) * 4
-        if size > self._vbo.size:
-            self._vbo.orphan(size=size * 2)
-        self._vbo.write(self._data)
+        positions = np.array(self._positions, np.float32)
+        # Colors stay 0-255, as arcade's shape shader expects.
+        colors = np.repeat(np.array(self._colors, np.float32), self._counts, axis=0)
+        for buffer, data in ((self._vbo, positions), (self._cbo, colors)):
+            if data.nbytes > buffer.size:
+                buffer.orphan(size=data.nbytes * 2)
+            buffer.write(data.tobytes())
         self._program["Position"] = 0.0, 0.0
         self._program["Angle"] = 0.0
         with self._ctx.enabled(self._ctx.BLEND):
-            self._geometry.render(self._program, vertices=len(self._data) // 6)
-        self._data = array("f")
+            self._ctx.blend_func = blend
+            self._geometry.render(self._program, vertices=len(positions) // 2)
+            self._ctx.blend_func = self._ctx.BLEND_DEFAULT
+        self._positions, self._colors, self._counts = [], [], []
+
+
+class _ImageBatch:
+    """Textured quads (p5's ``image()``) collected during a frame, drawn as one sprite list."""
+
+    def __init__(self) -> None:
+        self._sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self._pending: list[tuple[arcade.Texture, float, float, float, float, Color]] = []
+
+    def __bool__(self) -> bool:
+        return bool(self._pending)
+
+    def add(
+        self, texture: arcade.Texture, x: float, y: float, w: float, h: float, tint: Color
+    ) -> None:
+        self._pending.append((texture, x, y, w, h, tint))
+
+    def flush(self, blend: tuple[int, int]) -> None:
+        if not self._pending:
+            return
+        sprites = self._sprites
+        while len(sprites) < len(self._pending):
+            sprites.append(arcade.Sprite(self._pending[0][0]))
+        while len(sprites) > len(self._pending):
+            sprites.pop()
+        for sprite, (texture, x, y, w, h, tint) in zip(sprites, self._pending, strict=True):
+            if sprite.texture is not texture:
+                sprite.texture = texture
+            sprite.position = (x, y)
+            sprite.width, sprite.height = w, h
+            sprite.color = rgba(tint)
+        sprites.draw(blend_function=blend)
+        self._pending = []
+
+
+def make_texture(image: Image.Image, name: str) -> arcade.Texture:
+    """A texture for :meth:`Canvas.image`, from a PIL image with rows from the top."""
+    # The canvas camera points y down, which would draw the image upside down.
+    flipped = image.convert("RGBA").transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+    return arcade.Texture(flipped, hash=f"noc-{name}")
 
 
 class Canvas:
@@ -122,6 +178,8 @@ class Canvas:
         self._texts: dict[tuple[str, float, Color, str, str], arcade.Text] = {}
         self._ctx = window.ctx
         self._batch = _Batch(self._ctx)
+        self._image_batch = _ImageBatch()
+        self.additive = False  # p5's blendMode(ADD); reset every frame
         self._quad = geometry.quad_2d_fs()
         self._images: dict[tuple[int, int], Texture2D] = {}
         self._fbo = None
@@ -134,15 +192,30 @@ class Canvas:
     def frame(self) -> Iterator[None]:
         """Draw one frame; on a persistent canvas, into the texture that keeps the old ones."""
         self.transform = IDENTITY
+        self.additive = False
         if self._fbo is None:
             with self._camera.activate():
                 yield
-                self._batch.flush()
+                self._flush()
             return
         with self._fbo.activate(), self._camera.activate():
             yield
-            self._batch.flush()
+            self._flush()
         self._blit(self._texture)
+
+    def _flush(self) -> None:
+        # Additive blending weighted by alpha (p5's ADD): arcade's BLEND_ADDITIVE is (ONE, ONE),
+        # which would add a texture's full color even where it's transparent.
+        ctx = self._ctx
+        blend = (ctx.SRC_ALPHA, ctx.ONE) if self.additive else ctx.BLEND_DEFAULT
+        self._image_batch.flush(blend)
+        self._batch.flush(blend)
+
+    def set_additive(self, additive: bool) -> None:
+        """Switch additive blending on or off for what's drawn next (p5's ``blendMode()``)."""
+        if additive != self.additive:
+            self._flush()
+            self.additive = additive
 
     def _blit(self, texture: Texture2D) -> None:
         # Copy without blending: a persistent canvas's alpha is below 1 wherever translucent
@@ -176,6 +249,10 @@ class Canvas:
         apply = self.transform.apply
         return [apply(x, y) for x, y in points]
 
+    def _before_shapes(self) -> None:
+        if self._image_batch:
+            self._flush()
+
     def _shape(
         self,
         points: list[Point],
@@ -185,6 +262,7 @@ class Canvas:
         *,
         convex: bool,
     ) -> None:
+        self._before_shapes()
         if fill is not None:
             self._batch.add(tessellate.fan(points) if convex else tessellate.fill(points), fill)
         if stroke is not None:
@@ -193,6 +271,7 @@ class Canvas:
             )
 
     def background(self, color: Color) -> None:
+        self._before_shapes()
         corners = [(0.0, 0.0), (self.width, 0.0), (self.width, self.height), (0.0, self.height)]
         self._batch.add(tessellate.fan(corners), color)
 
@@ -203,6 +282,7 @@ class Canvas:
 
     def point(self, x: float, y: float, stroke: Color = BLACK, weight: float = 1) -> None:
         """A dot ``weight`` pixels across (p5 draws points with the stroke)."""
+        self._before_shapes()
         size = weight * self.transform.scale
         px, py = self.transform.apply(x, y)
         if size * self._pixel_scale <= 3:
@@ -234,10 +314,21 @@ class Canvas:
         stroke: Color | None = BLACK,
         weight: float = 1,
     ) -> None:
-        radius = max(width, height) / 2 * self.transform.scale * self._pixel_scale
-        segments = tessellate.segments_for(radius)
-        ring = tessellate.ellipse_points(x, y, width / 2, height / 2, segments)
-        self._shape(self._map(ring), fill, stroke, weight, convex=True)
+        scale = self.transform.scale
+        segments = tessellate.segments_for(max(width, height) / 2 * scale * self._pixel_scale)
+        if width != height and self.transform.angle:
+            outline = tessellate.ellipse_points(x, y, width / 2, height / 2, segments)
+            self._shape(self._map(outline), fill, stroke, weight, convex=True)
+            return
+        # Circles (or unrotated ellipses) keep their shape: transform only the center.
+        self._before_shapes()
+        cx, cy = self.transform.apply(x, y)
+        rx, ry = width / 2 * scale, height / 2 * scale
+        if fill is not None:
+            outline = tessellate.ellipse_points(cx, cy, rx, ry, segments)
+            self._batch.add(tessellate.fan(outline), fill)
+        if stroke is not None:
+            self._batch.add(tessellate.ring(cx, cy, rx, ry, weight * scale, segments), stroke)
 
     def rect(
         self,
@@ -270,15 +361,33 @@ class Canvas:
 
     def polyline(self, points: Sequence[Point], stroke: Color = BLACK, weight: float = 1) -> None:
         """An open shape (p5's ``beginShape()`` ... ``endShape()`` with ``noFill()``)."""
+        self._before_shapes()
         self._batch.add(tessellate.stroke(self._map(points), weight * self.transform.scale), stroke)
 
     # --- things that aren't shapes -----------------------------------------------------
+    def image(
+        self,
+        texture: arcade.Texture,
+        x: float,
+        y: float,
+        width: float,
+        height: float | None = None,
+        tint: Color = WHITE,
+    ) -> None:
+        """A texture centered at ``(x, y)`` (p5's ``imageMode(CENTER)``), tinted like ``tint()``."""
+        if self._batch:
+            self._flush()
+        scale = self.transform.scale
+        px, py = self.transform.apply(x, y)
+        h = width if height is None else height
+        self._image_batch.add(texture, px, py, width * scale, h * scale, tint)
+
     def pixels(self, image: npt.NDArray[np.uint8]) -> None:
         """Cover the canvas with an RGB or RGBA image, rows from the top (p5's ``updatePixels()``).
 
         The image may have any resolution; it is stretched to the canvas.
         """
-        self._batch.flush()
+        self._flush()
         height, width = image.shape[:2]
         if image.shape[2] == 3:
             alpha = np.full((height, width, 1), 255, np.uint8)
@@ -301,7 +410,7 @@ class Canvas:
         baseline: str = "baseline",
     ) -> None:
         """Text at ``(x, y)``; ``align`` and ``baseline`` follow arcade's ``anchor_x/anchor_y``."""
-        self._batch.flush()
+        self._flush()
         px, py = self.transform.apply(x, y)
         key = (text, size, color, align, baseline)
         if (label := self._texts.get(key)) is None:

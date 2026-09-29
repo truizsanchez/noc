@@ -8,6 +8,7 @@ All functions return a flat list of vertices, three per triangle.
 
 from __future__ import annotations
 
+import functools
 import itertools
 import math
 from collections.abc import Sequence
@@ -17,9 +18,26 @@ type Point = tuple[float, float]
 MITER_LIMIT = 4.0  # as a multiple of half the stroke weight, like SVG's default
 
 
-def ellipse_points(cx: float, cy: float, rx: float, ry: float, segments: int) -> list[Point]:
+@functools.cache
+def _unit_circle(segments: int) -> tuple[tuple[float, float], ...]:
     step = 2 * math.pi / segments
-    return [(cx + rx * math.cos(i * step), cy + ry * math.sin(i * step)) for i in range(segments)]
+    return tuple((math.cos(i * step), math.sin(i * step)) for i in range(segments))
+
+
+def ellipse_points(cx: float, cy: float, rx: float, ry: float, segments: int) -> list[Point]:
+    return [(cx + rx * c, cy + ry * s) for c, s in _unit_circle(segments)]
+
+
+def ring(cx: float, cy: float, rx: float, ry: float, weight: float, segments: int) -> list[Point]:
+    """The outline of an axis-aligned ellipse, ``weight`` wide: faster than :func:`stroke`."""
+    half = weight / 2
+    outer = [(cx + (rx + half) * c, cy + (ry + half) * s) for c, s in _unit_circle(segments)]
+    inner = [(cx + (rx - half) * c, cy + (ry - half) * s) for c, s in _unit_circle(segments)]
+    triangles: list[Point] = []
+    for i in range(segments):
+        j = (i + 1) % segments
+        triangles += (outer[i], inner[i], outer[j], outer[j], inner[i], inner[j])
+    return triangles
 
 
 def segments_for(radius: float) -> int:

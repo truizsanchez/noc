@@ -10,3 +10,4 @@ run the examples. Notes are added as each chapter is ported (see [ROADMAP.md](..
 | [1. Vectors](01-vectors.md) | `vector` | 0 (walkers, noise) |
 | [2. Forces](02-forces.md) | `physics` | 1 (vectors, `Mover`) |
 | [3. Oscillation](03-oscillation.md) | — | 2 (`Mover`, forces) |
+| [4. Particle systems](04-particle-systems.md) | `view.Canvas.image`, `set_additive`, `make_texture` | 2 (`Mover`), 3 (spaceship) |
