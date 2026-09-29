@@ -11,6 +11,7 @@ license-files = ["LICENSE"]
 dependencies = [
     "arcade>=3.3.3",
     "numpy>=2.5.3",
+    "pymunk>=6.9,<7",
 ]
 
 [build-system]

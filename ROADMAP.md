@@ -69,7 +69,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
   separation/alignment/cohesion, flocking, spatial subdivision. (Kept independent from game-ai; Shiffman's
   Reynolds-style formulation differs from Buckland's.)
 
-**[ ] Phase 7 — Ch.6 Physics Libraries** — ⚠ **decision point before coding**: survey pymunk (and alternatives) for
+**[x] Phase 7 — Ch.6 Physics Libraries** — ⚠ **decision point before coding**: survey pymunk (and alternatives) for
   both halves; then Matter.js examples → pymunk (bodies, static bodies, polygons/compound, constraints, mouse,
   attraction, collision events); integration-methods interlude (Euler vs. verlet); Toxiclibs examples → own verlet
   physics **and** library version where one exists (springs, soft string, soft body, force-directed graph, attraction).
