@@ -77,7 +77,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 **[x] Phase 8 — Ch.7 Cellular Automata** — elementary CA (Wolfram rules), Game of Life (numpy optional), object-oriented
   cells, variations (hexagonal/probabilistic/continuous as exercises).
 
-**[ ] Phase 9 — Ch.8 Fractals** — recursion, Cantor set, Koch curve, recursive trees, L-systems.
+**[x] Phase 9 — Ch.8 Fractals** — recursion, Cantor set, Koch curve, recursive trees, L-systems.
 
 **[x] Phase 10 — Ch.9 Evolutionary Computing** — GA for Shakespeare monkey, fitness/selection/crossover/mutation,
   smart rockets, interactive selection, evolving ecosystem.
