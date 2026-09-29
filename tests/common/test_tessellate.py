@@ -8,6 +8,7 @@ from noc.common.tessellate import (
     fan,
     fill,
     is_convex,
+    ring,
     segments_for,
     stroke,
 )
@@ -81,3 +82,9 @@ def test_ellipse_points_and_segment_count() -> None:
     assert segments_for(1) == 12
     assert segments_for(1000) == 96
     assert math.isclose(area(fan(ellipse_points(0, 0, 10, 10, 96))), math.pi * 100, rel_tol=0.01)
+
+
+def test_ring_is_an_annulus() -> None:
+    triangles = ring(0, 0, 10, 10, 2, 96)
+    assert len(triangles) == 6 * 96
+    assert math.isclose(area(triangles), math.pi * (11**2 - 9**2), rel_tol=0.01)
