@@ -17,6 +17,7 @@ Common keys: ``P`` pause, ``N`` one step while paused, ``R`` restart, ``H`` help
 
 from __future__ import annotations
 
+import functools
 import itertools
 import os
 import sys
@@ -144,6 +145,22 @@ def make_texture(image: Image.Image, name: str) -> arcade.Texture:
     # The canvas camera points y down, which would draw the image upside down.
     flipped = image.convert("RGBA").transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     return arcade.Texture(flipped, hash=f"noc-{name}")
+
+
+@functools.cache
+def disc_texture(ring: float) -> arcade.Texture:
+    """A white disc with a black outline ``ring`` of its radius wide, for :meth:`Canvas.discs`."""
+    size = 64
+    coords = (np.arange(size) + 0.5) / size * 2 - 1
+    x, y = np.meshgrid(coords, coords)
+    r = np.hypot(x, y)
+    edge = 2 / size  # one texel of antialiasing
+    alpha = np.clip((1 - r) / edge, 0, 1)
+    white = np.clip((1 - ring - r) / edge, 0, 1)
+    rgba = np.zeros((size, size, 4), np.uint8)
+    rgba[..., :3] = (white * 255)[..., None].astype(np.uint8)
+    rgba[..., 3] = (alpha * 255).astype(np.uint8)
+    return arcade.Texture(Image.fromarray(rgba), hash=f"noc-disc-{ring:.3f}")
 
 
 class Canvas:
@@ -363,6 +380,19 @@ class Canvas:
         """An open shape (p5's ``beginShape()`` ... ``endShape()`` with ``noFill()``)."""
         self._before_shapes()
         self._batch.add(tessellate.stroke(self._map(points), weight * self.transform.scale), stroke)
+
+    def discs(
+        self, centers: Sequence[Point], diameter: float, fills: Sequence[Color], weight: float = 1
+    ) -> None:
+        """Many same-size circles with a black outline, drawn as sprites.
+
+        Equivalent to calling :meth:`circle` for each center with its fill, but a thousand
+        of them cost about as much as a few tessellated circles.
+        """
+        ring = round(min(weight * 2 / diameter, 1.0), 3)
+        texture = disc_texture(ring)
+        for (x, y), fill in zip(centers, fills, strict=True):
+            self.image(texture, x, y, diameter + weight, tint=fill)
 
     # --- things that aren't shapes -----------------------------------------------------
     def image(
