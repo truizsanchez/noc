@@ -25,7 +25,7 @@ from noc.ch06_physics.soft import (
 from noc.ch06_physics.verlet import Attraction, FloatArray, VerletPhysics
 from noc.common.mathutils import clamp
 from noc.common.vector import Vector
-from noc.common.view import Canvas, Color, Sketch, gray
+from noc.common.view import Canvas, Color, Point, Sketch, gray
 
 GRAY = gray(127)
 
@@ -105,6 +105,23 @@ class DefaultRender(SpaceSketch):
             shape.friction = 0.01
         box.velocity, box.angular_velocity = (5, 0), 0.1
         world.add_box(self.space, w / 2, h - 5, w, 10, static=True)
+
+
+class CozyBoxes(Sketch):
+    title = "Example 6.2: A Comfortable and Cozy p5.js Sketch That Needs a Little Matter.js"
+    help = ("Hold the mouse button to add boxes; they don't fall yet (Exercise 6.2 adds physics)",)
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.boxes: list[Point] = []
+
+    def step(self) -> None:
+        if self.mouse_pressed:
+            self.boxes.append(self.mouse)
+
+    def draw(self, canvas: Canvas) -> None:
+        for x, y in self.boxes:
+            canvas.rect(x, y, 16, 16, fill=GRAY, weight=2, center=True)
 
 
 class FallingBoxes(SpaceSketch):
@@ -642,6 +659,7 @@ class AttractionBehaviors(VerletSketch):
 
 SKETCHES: tuple[type[Sketch], ...] = (
     DefaultRender,
+    CozyBoxes,
     FallingBoxes,
     BoxesAndBoundaries,
     PolygonShapes,

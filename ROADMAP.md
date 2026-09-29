@@ -1,11 +1,12 @@
 # Roadmap: "The Nature of Code" → idiomatic Python (arcade)
 
 ## Context
-New, empty repo `truizsanchez/noc` (only a PyCharm `main.py` and `.idea/`). Goal: an educational,
+The plan this port was built from, kept as a record. Goal: an educational,
 chapter-by-chapter port of Daniel Shiffman's *The Nature of Code* to **Pythonic** code, visualized
-with arcade, analogous to `../game-ai` (same stack, conventions, working method, phase structure).
+with arcade, analogous to [game-ai](https://github.com/truizsanchez/game-ai) (same stack, conventions, working method, phase structure).
 
-Source material (`../nature-of-code-private/`, outside the repo, never committed):
+Source material (`../nature-of-code-private/`, outside the repo, never committed; see
+[AGENTS.md](AGENTS.md) for where to get it):
 - `2024_p5js/noc-book-2-main/content/` — **2024 p5.js edition, primary reference**: one HTML file per
   chapter (`00_randomness.html` … `11_nn_ga.html`), `images/`, and `examples/<chapter>/<example>/sketch.js`
   (~165 sketches, examples + exercise solutions). Book text is CC BY-NC-SA 4.0.
@@ -44,12 +45,12 @@ Canvas default 640×240 like the book's sketches. Stack: uv, ruff (same rule set
 Progress: `[x]` merged into `main`, `[ ]` pending.
 
 **[x] Phase 0 — Bootstrap + book to Markdown**
-- Remove PyCharm `main.py`; ignore `.idea/`. pyproject/ruff/mypy/pytest config copied from `../game-ai`, CI workflow,
+- Ignore `.idea/`. pyproject/ruff/mypy/pytest config copied from game-ai, CI workflow,
   README (chapter map table: book chapter ↔ 2024 example dirs ↔ 2012 dirs ↔ package), CLAUDE.md, LICENSE (MIT, code only).
 - `tools/html_to_md.py`: 2024 content HTML → one `.md` per chapter + images into `../nature-of-code-private/book-md/`;
   code blocks as fenced JS, math kept readable (the HTML uses `data-type="equation"` / KaTeX).
 - Demo harness in `noc.common.view` (sketch-like: `setup`/`step`/`draw`, fixed timestep, help overlay, demo switching),
-  modelled on `../game-ai/src/gameai/common/view.py`.
+  modelled on game-ai's `src/gameai/common/view.py`.
 
 **[x] Phase 1 — Introduction + Ch.0 Randomness**
 - Random walkers, distributions, gaussian, accept-reject, custom probability, **Perlin noise** (port of p5's `noise()`
@@ -99,11 +100,8 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 3. arcade demo; ruff + format + mypy + pytest green; feature branch → PR → CI green → merge → next phase.
 
 ## Privacy: no real email anywhere
-The global git config uses a personal address; the repo must never inherit it.
-Before the **first commit**: set the repo-local `user.email` to the GitHub noreply address
-(as in `../game-ai`). `pyproject.toml` authors get only
-`{ name = "truizsanchez" }`, no email; nothing in README/LICENSE/docs contains it. Before each push, check
-`git log --format='%ae %ce'` shows only the noreply address. Record this in CLAUDE.md and memory.
+Commits use the GitHub noreply address, never a personal one; `pyproject.toml` authors get only
+`{ name = "truizsanchez" }`. The rules are in [AGENTS.md](AGENTS.md).
 
 ## Verification
 - Phase 0: all chapters in `book-md/` with readable code, equations and images; checks pass on the skeleton; CI green.

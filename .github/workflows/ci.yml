@@ -15,4 +15,6 @@ jobs:
       - run: uv run ruff check
       - run: uv run ruff format --check
       - run: uv run mypy
+      # The sketch tests render offscreen through EGL (Mesa's software renderer).
+      - run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1-mesa-dri
       - run: uv run pytest

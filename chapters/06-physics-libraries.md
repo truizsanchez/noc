@@ -10,26 +10,27 @@ with pymunk versions of the soft bodies to compare against (`V` switches).
 | # | Sketch | Shows |
 |---|---|---|
 | 1 | Example 6.1 | a body, a ground and a function that draws any pymunk space |
-| 2 | Exercise 6.2 | boxes added with the mouse, removed when they leave the canvas |
-| 3 | Example 6.3 | falling boxes hitting static boundaries |
-| 4 | Example 6.4 | polygon shapes |
-| 5 | Example 6.5 | compound bodies: a lollipop of two shapes |
-| 6 | Example 6.6 | a pendulum: a `PinJoint` |
-| 7 | Exercise 6.5 | a bridge of circles joined by pins, both ends static |
-| 8 | Example 6.7 | a windmill: a `PivotJoint` |
-| 9 | Exercise 6.7 | the windmill turned by a motor |
-| 10 | Example 6.8 | dragging bodies with the mouse |
-| 11 | Example 6.9 | attraction, with gravity off |
-| 12 | Example 6.10 | collision events: particles change color on contact |
-| 13 | Exercise 6.9 | particles that disappear when they collide |
-| 14 | Integration interlude | explicit Euler, semi-implicit Euler and Verlet on one orbit |
-| 15 | Example 6.11 | a simple Verlet spring |
-| 16 | Example 6.12 | a soft string (Verlet or pymunk) |
-| 17 | Exercise 6.10 | a hanging cloth (Verlet or pymunk) |
-| 18 | Example 6.13 | a soft-body character (Verlet or pymunk) |
-| 19 | Example 6.14 | a cluster: a force-directed graph |
-| 20 | Exercise 6.13 | eight clusters kept apart by minimum-distance springs |
-| 21 | Example 6.15 | attraction and repulsion behaviors |
+| 2 | Example 6.2 | boxes drawn where the mouse is pressed, before adding physics |
+| 3 | Exercise 6.2 | boxes added with the mouse, removed when they leave the canvas |
+| 4 | Example 6.3 | falling boxes hitting static boundaries |
+| 5 | Example 6.4 | polygon shapes |
+| 6 | Example 6.5 | compound bodies: a lollipop of two shapes |
+| 7 | Example 6.6 | a pendulum: a `PinJoint` |
+| 8 | Exercise 6.5 | a bridge of circles joined by pins, both ends static |
+| 9 | Example 6.7 | a windmill: a `PivotJoint` |
+| 10 | Exercise 6.7 | the windmill turned by a motor |
+| 11 | Example 6.8 | dragging bodies with the mouse |
+| 12 | Example 6.9 | attraction, with gravity off |
+| 13 | Example 6.10 | collision events: particles change color on contact |
+| 14 | Exercise 6.9 | particles that disappear when they collide |
+| 15 | Integration interlude | explicit Euler, semi-implicit Euler and Verlet on one orbit |
+| 16 | Example 6.11 | a simple Verlet spring |
+| 17 | Example 6.12 | a soft string (Verlet or pymunk) |
+| 18 | Exercise 6.10 | a hanging cloth (Verlet or pymunk) |
+| 19 | Example 6.13 | a soft-body character (Verlet or pymunk) |
+| 20 | Example 6.14 | a cluster: a force-directed graph |
+| 21 | Exercise 6.13 | eight clusters kept apart by minimum-distance springs |
+| 22 | Example 6.15 | attraction and repulsion behaviors |
 
 ## Book sections → code
 
