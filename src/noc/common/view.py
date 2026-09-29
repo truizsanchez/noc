@@ -382,10 +382,11 @@ class Canvas:
         h = width if height is None else height
         self._image_batch.add(texture, px, py, width * scale, h * scale, tint)
 
-    def pixels(self, image: npt.NDArray[np.uint8]) -> None:
+    def pixels(self, image: npt.NDArray[np.uint8], *, smooth: bool = True) -> None:
         """Cover the canvas with an RGB or RGBA image, rows from the top (p5's ``updatePixels()``).
 
-        The image may have any resolution; it is stretched to the canvas.
+        The image may have any resolution; it is stretched to the canvas, blending between
+        pixels, or with ``smooth=False`` as crisp blocks (grids of cells).
         """
         self._flush()
         height, width = image.shape[:2]
@@ -395,6 +396,8 @@ class Canvas:
         if (texture := self._images.get((width, height))) is None:
             texture = self._ctx.texture((width, height), components=4)
             self._images[width, height] = texture
+        mode = self._ctx.LINEAR if smooth else self._ctx.NEAREST
+        texture.filter = (mode, mode)
         texture.write(np.ascontiguousarray(image[::-1]).tobytes())
         self._blit(texture)
 

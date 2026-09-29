@@ -74,7 +74,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
   attraction, collision events); integration-methods interlude (Euler vs. verlet); Toxiclibs examples → own verlet
   physics **and** library version where one exists (springs, soft string, soft body, force-directed graph, attraction).
 
-**[ ] Phase 8 — Ch.7 Cellular Automata** — elementary CA (Wolfram rules), Game of Life (numpy optional), object-oriented
+**[x] Phase 8 — Ch.7 Cellular Automata** — elementary CA (Wolfram rules), Game of Life (numpy optional), object-oriented
   cells, variations (hexagonal/probabilistic/continuous as exercises).
 
 **[ ] Phase 9 — Ch.8 Fractals** — recursion, Cantor set, Koch curve, recursive trees, L-systems.
