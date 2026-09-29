@@ -59,7 +59,7 @@ Progress: `[x]` merged into `main`, `[ ]` pending.
 
 **[x] Phase 3 — Ch.2 Forces** — Newton's laws, mass, gravity/wind, friction, drag (liquid), gravitational attraction, n-body.
 
-**[ ] Phase 4 — Ch.3 Oscillation** — angles, angular motion, polar coordinates, simple harmonic motion, waves,
+**[x] Phase 4 — Ch.3 Oscillation** — angles, angular motion, polar coordinates, simple harmonic motion, waves,
   pendulum, springs.
 
 **[ ] Phase 5 — Ch.4 Particle Systems** — particle/emitter, many emitters, inheritance & polymorphism (→ Protocols),
